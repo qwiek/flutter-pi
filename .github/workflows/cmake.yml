@@ -51,5 +51,4 @@ jobs:
      - uses: docker://arm32v7/debian:bullseye
        with:
          entrypoint: /bin/bash
-         args: |
-           -c 'echo hello world && echo hello world 2'
+         args: -c "echo hello world"
