@@ -52,20 +52,12 @@ jobs:
        with:
          entrypoint: /bin/bash
          args: |
-           -c " \
-           echo hello world && \
-           echo hello world 2 \
+           -c "\
+           sudo apt-get update && \
+           sudo apt-get install git cmake ninja-build && \
+           git clone https://github.com/ardera/flutter-pi && \
+           git checkout ${{ github.ref }} && \
+           cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release && \
+           ninja -Cflutter-pi/build && \
+           sudo ninja -Cflutter-pi/build install \
            "
-           
-  crossbuild2:
-    runs-on: ubuntu-latest
-    container:
-      image: arm32v7/debian:bullseye
-    steps:
-     - uses: actions/checkout@v2
-      
-     - uses: ./.github/actions/build-flutter-pi
-       with:
-         additional-cmake-args: |
-           -DCMAKE_BUILD_TYPE=Release
-   
