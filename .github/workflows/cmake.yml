@@ -52,6 +52,6 @@ jobs:
        with:
          entrypoint: /bin/bash
          args: |
-           -c '
-           echo hello world
+           -c '\n\
+           echo hello world \n\
            '
