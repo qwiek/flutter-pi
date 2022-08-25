@@ -41,3 +41,14 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
 
+  crossbuild:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     
+     - uses: docker/setup-qemu-action@v2
+     
+     - uses: docker://debian:bullseye
+       with:
+         entrypoint: /bin/echo
+         args: hello world
