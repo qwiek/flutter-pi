@@ -48,7 +48,7 @@ jobs:
      
      - uses: docker/setup-qemu-action@v2
      
-     - uses: docker://debian:bullseye
+     - uses: docker://arm32v7/debian:bullseye
        with:
          entrypoint: /bin/echo
          args: hello world
