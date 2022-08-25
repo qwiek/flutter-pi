@@ -1,0 +1,58 @@
+name: 'build flutter-pi'
+description: 'Install build deps, clone, build and install flutter-pi'
+inputs:
+  cmake-args:
+    description: 'The additional args passed to cmake.'
+    required: true
+  install-gstreamer-video-player-deps:
+    description: 'If true, install the dependencies required for building the gstreamer video player plugin.'
+    required: false
+    default: 'false'
+  install-gstreamer-audio-player-deps:
+    description: 'If true, install the dependencies required for building the gstreamer audio player plugin.'
+    required: false
+    default: 'false'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      shell: bash
+      run: |
+        sudo apt-get install -y \
+          cmake ninja-build \
+          libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev ttf-mscorefonts-installer fontconfig libsystemd-dev libinput-dev libudev-dev libxkbcommon-dev
+    
+    - name: Install gstreamer video player deps
+      shell: bash
+      if: ${{ inputs.install-gstreamer-video-player-deps == 'true' }}
+      run: |
+        sudo apt-get install -y libgstreamer-plugins-base1.0-dev
+    
+    - name: Install gstreamer video player deps
+      shell: bash
+      if: ${{ inputs.install-gstreamer-audio-player-deps == 'true' }}
+      run: |
+        sudo apt-get install -y libgstreamer-plugins-base1.0-dev
+    
+    - name: Configure build
+      shell: bash
+      run: |
+        cmake \
+          -B ${{ github.workspace }}/build \
+          -S. \
+          -GNinja \
+          ${{ inputs.cmake-args }}
+          
+    - name: Build flutter-pi
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: |
+        ninja
+        
+    - name: Install flutter-pi
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: |
+        sudo ninja install
