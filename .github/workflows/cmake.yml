@@ -61,7 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: arm32v7/debian:bullseye
-      options: $(echo test > /dev/null)
     steps:
      - uses: actions/checkout@v2
       
