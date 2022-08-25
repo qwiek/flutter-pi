@@ -54,7 +54,7 @@ jobs:
          args: |
            -c "\
            apt-get update && \
-           apt-get install git cmake ninja-build && \
+           apt-get install -y git cmake ninja-build && \
            git clone https://github.com/ardera/flutter-pi && \
            git checkout ${{ github.ref }} && \
            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release && \
