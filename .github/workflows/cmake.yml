@@ -53,11 +53,11 @@ jobs:
          entrypoint: /bin/bash
          args: |
            -c "\
-           sudo apt-get update && \
-           sudo apt-get install git cmake ninja-build && \
+           apt-get update && \
+           apt-get install git cmake ninja-build && \
            git clone https://github.com/ardera/flutter-pi && \
            git checkout ${{ github.ref }} && \
            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release && \
            ninja -Cflutter-pi/build && \
-           sudo ninja -Cflutter-pi/build install \
+           ninja -Cflutter-pi/build install \
            "
