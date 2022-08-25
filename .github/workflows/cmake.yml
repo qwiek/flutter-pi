@@ -56,3 +56,18 @@ jobs:
            echo hello world && \
            echo hello world 2 \
            "
+           
+  crossbuild2:
+    runs-on: ubuntu-latest
+    container:
+      image: arm32v7/debian:bullseye
+      options: |
+        $(docker run --rm --privileged tonistiigi/binfmt:latest --install all &> /dev/null)
+    steps:
+     - uses: actions/checkout@v2
+      
+     - uses: ./.github/actions/build-flutter-pi
+       with:
+         additional-cmake-args: |
+           -DCMAKE_BUILD_TYPE=Release
+   
