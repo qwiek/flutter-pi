@@ -62,7 +62,7 @@ jobs:
     container:
       image: arm32v7/debian:bullseye
       options: |
-        $(docker run --rm --privileged tonistiigi/binfmt:latest --install all &> /dev/null)
+        $(echo test)
     steps:
      - uses: actions/checkout@v2
       
