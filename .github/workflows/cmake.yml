@@ -56,7 +56,7 @@ jobs:
             echo ::endgroup:: && \
             echo ::group::Cloning && \
             git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
+            pushd flutter-pi && git checkout ${{ github.ref }} && popd && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
             cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
@@ -87,7 +87,7 @@ jobs:
             echo ::endgroup:: && \
             echo ::group::Cloning && \
             git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
+            pushd flutter-pi && git checkout ${{ github.ref }} && popd && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
             cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
@@ -118,7 +118,7 @@ jobs:
             echo ::endgroup:: && \
             echo ::group::Cloning && \
             git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
+            pushd flutter-pi && git checkout ${{ github.ref }} && popd && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
             cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
@@ -149,7 +149,7 @@ jobs:
             echo ::endgroup:: && \
             echo ::group::Cloning && \
             git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
+            pushd flutter-pi && git checkout ${{ github.ref }} && popd && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
             cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
@@ -181,7 +181,7 @@ jobs:
             echo ::endgroup:: && \
             echo ::group::Cloning && \
             git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
+            pushd flutter-pi && git checkout ${{ github.ref }} && popd && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
             cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
@@ -212,7 +212,7 @@ jobs:
             echo ::endgroup:: && \
             echo ::group::Cloning && \
             git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
+            pushd flutter-pi && git checkout ${{ github.ref }} && popd && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
             cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
