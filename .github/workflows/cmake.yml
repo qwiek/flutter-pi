@@ -36,14 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        img:
-          - 'arm32v6/debian:bullseye'
-          - 'arm32v7/debian:bullseye'
-          - 'arm64v8/debian:bullseye'
-          - 'i386/debian:bullseye'
-          - 'amd64/debian:bullseye'
-          - 'riscv64/debian:bullseye'
-          - 'navikey/raspbian-bullseye'
+        img: ['arm32v6/debian:bullseye', 'arm32v7/debian:bullseye', 'arm64v8/debian:bullseye', 'i386/debian:bullseye', 'amd64/debian:bullseye', 'riscv64/debian:bullseye', 'navikey/raspbian-bullseye']
     steps:
      - uses: actions/checkout@v2
      
