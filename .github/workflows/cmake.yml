@@ -36,38 +36,7 @@ jobs:
   # e.g. this doesn't work:
   #  uses: docker://${{ matrix.image }}
   # It'll just say matrix is not defined.
-  # Even if you put command inside a local github action, and specify the image as an input to the github action, it'll also say it's not defined.
-  build-armv6:
-    name: build (debian bullseye armv6)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: docker/setup-qemu-action@v2
-     
-      - name: Clone, Configure, Build and Install flutter-pi
-        uses: docker://arm32v6/debian:bullseye
-        with:
-          entrypoint: /bin/bash
-          args: |
-            -c "\
-            export DEBIAN_FRONTEND=noninteractive && \
-            echo "::group::Installing dependencies" && \
-            apt-get update && \
-            apt-get install -y git cmake ninja-build gcc g++ libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev fonts-liberation fontconfig libsystemd-dev libinput-dev libudev-dev libxkbcommon-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad gstreamer1.0-libav && \
-            echo "::endgroup::" && \
-            echo "::group::Cloning" && \
-            git clone https://github.com/ardera/flutter-pi && \
-            git checkout ${{ github.ref }} && \
-            echo "::endgroup::" && \
-            echo "::group::Configuring build" && \
-            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
-            echo "::endgroup::" && \
-            echo "::group::Building" && \
-            ninja -Cflutter-pi/build && \
-            echo "::endgroup::" && \
-            echo "::group::Installing" && \
-            ninja -Cflutter-pi/build install \
-            "
-            
+  # Even if you put command inside a local github action, and specify the image as an input to the github action, it'll also say it's not defined.           
   build-armv7:
     name: build (debian bullseye armv7)
     runs-on: ubuntu-latest
@@ -194,13 +163,13 @@ jobs:
   
   # Totally unneccessary.
   build-riscv64:
-    name: build (debian bullseye riscv64)
+    name: build (debian sid riscv64)
     runs-on: ubuntu-latest
     steps:
       - uses: docker/setup-qemu-action@v2
      
       - name: Clone, Configure, Build and Install flutter-pi
-        uses: docker://riscv64/debian:bullseye
+        uses: docker://riscv64/debian:sid
         with:
           entrypoint: /bin/bash
           args: |
