@@ -42,7 +42,8 @@ jobs:
      
      - uses: docker/setup-qemu-action@v2
      
-     - uses: docker://${{ matrix.img }}
+     - name: Clone, Configure, Build and Install flutter-pi
+       uses: docker://${{ matrix.img }}
        with:
          entrypoint: /bin/bash
          args: |
