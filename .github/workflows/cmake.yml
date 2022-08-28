@@ -118,7 +118,9 @@ jobs:
             git clone https://github.com/ardera/flutter-pi -b ${{ github.ref_name }} && \
             echo ::endgroup:: && \
             echo ::group::Configuring build && \
-            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
+            mkdir flutter-pi/build && pushd flutter-pi/build && \
+            cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }} && \
+            popd && \
             echo ::endgroup:: && \
             echo ::group::Building && \
             ninja -Cflutter-pi/build && \
