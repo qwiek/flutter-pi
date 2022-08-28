@@ -66,7 +66,67 @@ jobs:
             echo ::group::Installing && \
             ninja -Cflutter-pi/build install \
             "
+  
+  build-oldstable-armv7:
+    name: build (debian buster armv7)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-qemu-action@v2
+     
+      - name: Clone, Configure, Build and Install flutter-pi
+        uses: docker://arm32v7/debian:buster
+        with:
+          entrypoint: /bin/bash
+          args: |
+            -c "\
+            export DEBIAN_FRONTEND=noninteractive && \
+            echo ::group::Installing dependencies && \
+            apt-get update && \
+            apt-get install -y git cmake ninja-build gcc g++ libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev fonts-liberation fontconfig libsystemd-dev libinput-dev libudev-dev libxkbcommon-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad gstreamer1.0-libav && \
+            echo ::endgroup:: && \
+            echo ::group::Cloning && \
+            git clone https://github.com/ardera/flutter-pi -b ${{ github.ref_name }} && \
+            echo ::endgroup:: && \
+            echo ::group::Configuring build && \
+            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
+            echo ::endgroup:: && \
+            echo ::group::Building && \
+            ninja -Cflutter-pi/build && \
+            echo ::endgroup:: && \
+            echo ::group::Installing && \
+            ninja -Cflutter-pi/build install \
+            "
             
+  build-oldoldstable-armv7:
+    name: build (debian stretch armv7)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-qemu-action@v2
+     
+      - name: Clone, Configure, Build and Install flutter-pi
+        uses: docker://arm32v7/debian:stretch
+        with:
+          entrypoint: /bin/bash
+          args: |
+            -c "\
+            export DEBIAN_FRONTEND=noninteractive && \
+            echo ::group::Installing dependencies && \
+            apt-get update && \
+            apt-get install -y git cmake ninja-build gcc g++ libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev fonts-liberation fontconfig libsystemd-dev libinput-dev libudev-dev libxkbcommon-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad gstreamer1.0-libav && \
+            echo ::endgroup:: && \
+            echo ::group::Cloning && \
+            git clone https://github.com/ardera/flutter-pi -b ${{ github.ref_name }} && \
+            echo ::endgroup:: && \
+            echo ::group::Configuring build && \
+            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
+            echo ::endgroup:: && \
+            echo ::group::Building && \
+            ninja -Cflutter-pi/build && \
+            echo ::endgroup:: && \
+            echo ::group::Installing && \
+            ninja -Cflutter-pi/build install \
+            "
+  
   build-armv8:
     name: build (debian bullseye armv8)
     runs-on: ubuntu-latest
@@ -188,32 +248,3 @@ jobs:
             ninja -Cflutter-pi/build install \
             "
             
-  build-armv7-raspbian-bullseye:
-    name: build (raspbian bullseye armv7)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: docker/setup-qemu-action@v2
-     
-      - name: Clone, Configure, Build and Install flutter-pi
-        uses: docker://navikey/raspbian-bullseye
-        with:
-          entrypoint: /bin/bash
-          args: |
-            -c "\
-            export DEBIAN_FRONTEND=noninteractive && \
-            echo ::group::Installing dependencies && \
-            apt-get update && \
-            apt-get install -y git cmake ninja-build gcc g++ libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev fonts-liberation fontconfig libsystemd-dev libinput-dev libudev-dev libxkbcommon-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad gstreamer1.0-libav && \
-            echo ::endgroup:: && \
-            echo ::group::Cloning && \
-            git clone https://github.com/ardera/flutter-pi -b ${{ github.ref_name }} && \
-            echo ::endgroup:: && \
-            echo ::group::Configuring build && \
-            cmake -Bflutter-pi/build -Sflutter-pi -GNinja -DCMAKE_BUILD_TYPE=Release ${{ inputs.cmake-args }}&& \
-            echo ::endgroup:: && \
-            echo ::group::Building && \
-            ninja -Cflutter-pi/build && \
-            echo ::endgroup:: && \
-            echo ::group::Installing && \
-            ninja -Cflutter-pi/build install \
-            "
