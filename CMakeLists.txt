@@ -44,6 +44,7 @@ option(BUILD_GSTREAMER_VIDEO_PLAYER_PLUGIN "Include the gstreamer based video pl
 option(BUILD_GSTREAMER_AUDIO_PLAYER_PLUGIN "Include the gstreamer based audio plugins in the finished binary." ON)
 option(TRY_BUILD_GSTREAMER_VIDEO_PLAYER_PLUGIN "Don't throw an error if the gstreamer libs aren't found, instead just don't build the gstreamer video player plugin in that case." ON)
 option(TRY_BUILD_GSTREAMER_AUDIO_PLAYER_PLUGIN "Don't throw an error if the gstreamer libs aren't found, instead just don't build gstreamer audio plugin." ON)
+option(USE_PLAYBIN3 "Use experimental playbin3 for gstreamer video_player plugin." OFF)
 option(DUMP_ENGINE_LAYERS "True if flutter-pi should dump the list of rendering layers that the flutter engine sends to flutter-pi on each draw." OFF)
 option(ENABLE_TSAN "True to build & link with -fsanitize=thread" OFF)
 option(ENABLE_ASAN "True to build & link with -fsanitize=address" OFF)
@@ -270,6 +271,9 @@ if (BUILD_GSTREAMER_VIDEO_PLAYER_PLUGIN)
       ${LIBGSTREAMER_VIDEO_CFLAGS}
       ${LIBGSTREAMER_AUDIO_CFLAGS}
     )
+    if (USE_PLAYBIN3)
+      target_compile_definitions(flutter-pi PRIVATE "USE_PLAYBIN3")
+    endif()
   else()
     message(NOTICE "Couldn't find gstreamer libraries. Gstreamer video player plugin won't be build.")
   endif()
