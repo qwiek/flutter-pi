@@ -968,28 +968,6 @@ static int init(struct gstplayer *player, bool force_sw_decoders) {
 }
 
 static void maybe_deinit(struct gstplayer *player) {
-    struct my_gst_object {
-        GInitiallyUnowned object;
-
-        /*< public >*/ /* with LOCK */
-        GMutex         lock;        /* object LOCK */
-        gchar         *name;        /* object name */
-        GstObject     *parent;      /* this object's parent, weak ref */
-        guint32        flags;
-
-        /*< private >*/
-        GList         *control_bindings;  /* List of GstControlBinding */
-        guint64        control_rate;
-        guint64        last_sync;
-
-        gpointer _gst_reserved;
-    };
-
-    struct my_gst_object *sink = (struct my_gst_object*) player->sink, *bus = (struct my_gst_object*) player->bus, *pipeline = (struct my_gst_object*) player->playbin;
-    (void) sink;
-    (void) bus;
-    (void) pipeline;
-
     if (player->busfd_events != NULL) {
         sd_event_source_unrefp(&player->busfd_events);
     }
