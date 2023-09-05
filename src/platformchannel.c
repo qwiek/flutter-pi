@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "platformchannel.h"
 
 #include <assert.h>
@@ -336,6 +337,7 @@ int platch_calc_value_size_std(struct std_value *value, size_t *size_out) {
 
     return 0;
 }
+
 int platch_write_value_to_buffer_std(struct std_value *value, uint8_t **pbuffer) {
     const uint8_t *byteArray;
     size_t size;
@@ -353,6 +355,7 @@ int platch_write_value_to_buffer_std(struct std_value *value, uint8_t **pbuffer)
             _align((uintptr_t *) pbuffer, 8, NULL);
             _write_double(pbuffer, value->float64_value, NULL);
             break;
+
         case kStdLargeInt:
         case kStdString:
         case kStdUInt8Array:
@@ -366,10 +369,13 @@ int platch_write_value_to_buffer_std(struct std_value *value, uint8_t **pbuffer)
             }
 
             _writeSize(pbuffer, size, NULL);
+
             for (int i = 0; i < size; i++) {
                 _write_u8(pbuffer, byteArray[i], NULL);
             }
+            
             break;
+        
         case kStdInt32Array:
             size = value->size;
 
@@ -423,8 +429,11 @@ int platch_write_value_to_buffer_std(struct std_value *value, uint8_t **pbuffer)
                 if (ok != 0)
                     return ok;
             }
+
             break;
-        default: return EINVAL;
+
+        default:
+            UNREACHABLE();
     }
 
     return 0;
@@ -436,7 +445,22 @@ size_t platch_calc_value_size_json(struct json_value *value) {
         case kJsonNull:
         case kJsonTrue: return 4;
         case kJsonFalse: return 5;
-        case kJsonNumber:; char numBuffer[32]; return sprintf(numBuffer, "%g", value->number_value);
+        case kJsonNumber: {
+            char *buffer;
+            ASSERTED int ok;
+
+            if (trunc(value->number_value) == value->number_value) {
+                ok = asprintf(&buffer, "%ld", (long) value->number_value);
+                ASSERT(ok >= 0);
+            } else {
+                ok = asprintf(&buffer, "%f", value->number_value);
+                ASSERT(ok >= 0);
+            }
+
+            free(buffer);
+            return ok;
+        }
+
         case kJsonString:
             size = 2;
 
@@ -457,20 +481,26 @@ size_t platch_calc_value_size_json(struct json_value *value) {
             return size;
         case kJsonArray:
             size += 2;
+
             for (int i = 0; i < value->size; i++) {
                 size += platch_calc_value_size_json(value->array + i);
                 if (i + 1 != value->size)
                     size += 1;
             }
+
             return size;
+
         case kJsonObject:
             size += 2;
+
             for (int i = 0; i < value->size; i++) {
                 size += strlen(value->keys[i]) + 3 + platch_calc_value_size_json(&(value->values[i]));
                 if (i + 1 != value->size)
                     size += 1;
             }
+
             return size;
+
         default: return EINVAL;
     }
 
@@ -481,7 +511,13 @@ int platch_write_value_to_buffer_json(struct json_value *value, uint8_t **pbuffe
         case kJsonNull: *pbuffer += sprintf((char *) *pbuffer, "null"); break;
         case kJsonTrue: *pbuffer += sprintf((char *) *pbuffer, "true"); break;
         case kJsonFalse: *pbuffer += sprintf((char *) *pbuffer, "false"); break;
-        case kJsonNumber: *pbuffer += sprintf((char *) *pbuffer, "%g", value->number_value); break;
+        case kJsonNumber:
+             if (trunc(value->number_value) == value->number_value) {
+                *pbuffer += sprintf((char*) *pbuffer, "%ld", (long) value->number_value);
+            } else {
+                *pbuffer += sprintf((char*) *pbuffer, "%f", value->number_value);
+            }
+
         case kJsonString:
             *((*pbuffer)++) = '\"';
 
