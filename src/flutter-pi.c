@@ -2119,7 +2119,9 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
 
     // find a GPU that has a primary node
     drmdev = NULL;
+    LOG_ERROR("*********************************** QWIEK ********************************** %d\n"));
     for (int i = 0; i < n_devices; i++) {
+        LOG_ERROR("Device %d: %s\n", i, devices[i]->nodes[DRM_NODE_PRIMARY]);
         drmDevicePtr device;
 
         device = devices[i];
