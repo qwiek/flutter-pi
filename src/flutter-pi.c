@@ -2128,6 +2128,7 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
 
         if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
             // We need a primary node.
+            LOG_ERROR("Device \"%s\" doesn't have a primary node. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
             continue;
         }
 
@@ -2139,6 +2140,7 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
 
         for_each_connector_in_drmdev(drmdev, connector) {
             if (connector->variable_state.connection_state == kConnected_DrmConnectionState) {
+                LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
                 goto found_connected_connector;
             }
         }
