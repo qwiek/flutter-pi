@@ -2170,7 +2170,7 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
                 LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
                 LOG_ERROR("DEVICE NAME: %d\n", connector->type);
                 LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
-                if (cmd_args.drm_vout_display != NULL) {
+                if (flutterpi->drm_vout_display != NULL) {
                    LOG_ERROR("USING DISPLAY: %s\n", cmd_args.drm_vout_display);
                 } else {
                     LOG_ERROR("USING DEFAULT DISPLAY\n");
@@ -2378,6 +2378,9 @@ struct flutterpi *flutterpi_new_from_args(int argc, char **argv) {
     if (ok == false) {
         goto fail_free_fpi;
     }
+
+    // Sla de waarde van drm_vout_display op in fpi
+    fpi->drm_vout_display = cmd_args.drm_vout_display ? strdup(cmd_args.drm_vout_display) : NULL;
 
 #ifndef HAVE_VULKAN
     if (cmd_args.use_vulkan == true) {
