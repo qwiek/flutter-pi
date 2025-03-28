@@ -141,6 +141,7 @@ OPTIONS:\n\
                              without a display attached.\n\
   --dummy-display-size \"width,height\" The width & height of the dummy display\n\
                              in pixels.\n\
+  --drm-vout-display <drm-device> The DRM display to use.\n\
 \n\
   -h, --help                 Show this help and exit.\n\
 \n\
@@ -1853,6 +1854,16 @@ static bool parse_vec2i(const char *str, struct vec2i *out) {
     return true;
 }
 
+bool is_valid_drm_display(const char *display) {
+    const char *valid_displays[] = { "HDMI-A-1", "HDMI-A-2", "DSI-1", "DSI-2" };
+    for (size_t i = 0; i < sizeof(valid_displays) / sizeof(valid_displays[0]); i++) {
+        if (strcmp(display, valid_displays[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool flutterpi_parse_cmdline_args(int argc, char **argv, struct flutterpi_cmdline_args *result_out) {
     bool finished_parsing_options;
     int runtime_mode_int = FLUTTER_RUNTIME_MODE_DEBUG;
@@ -1876,6 +1887,7 @@ bool flutterpi_parse_cmdline_args(int argc, char **argv, struct flutterpi_cmdlin
         { "videomode", required_argument, NULL, 'v' },
         { "dummy-display", no_argument, &dummy_display_int, 1 },
         { "dummy-display-size", required_argument, NULL, 's' },
+        { "drm-vout-display", required_argument, NULL, 'i' },
         { 0, 0, 0, 0 },
     };
 
@@ -1995,6 +2007,18 @@ valid_format:
                     return false;
                 }
 
+                break;
+
+            case 'i':  // --drm-vout-display
+                result_out->drm_vout_display = strdup(optarg);
+                if (result_out->drm_vout_display == NULL) {
+                    LOG_ERROR("Out of memory while parsing --drm-vout-display.\n");
+                    return false;
+                }
+                if (!is_valid_drm_display(result_out->drm_vout_display)) {
+                    LOG_ERROR("Invalid DRM display specified: %s. Valid options are HDMI-A-1, HDMI-A-2, DSI-1, DSI-2.\n", optarg);
+                    return false;
+                }
                 break;
 
             case 'h': printf("%s", usage); return false;
@@ -2147,6 +2171,8 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
                 LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
                 if (connector->type == DRM_MODE_CONNECTOR_DSI) {
                     goto found_connected_connector;
+                } else {
+                    continue;
                 }
             }
         }
