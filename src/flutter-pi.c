@@ -2126,6 +2126,25 @@ static void on_drmdev_close(int fd, void *fd_metadata, void *userdata) {
 
 static const struct drmdev_interface drmdev_interface = { .open = on_drmdev_open, .close = on_drmdev_close };
 
+bool parse_drm_vout_display(const char *display, int *type_out, int *type_id_out) {
+    if (strcmp(display, "HDMI-A-1") == 0) {
+        *type_out = DRM_MODE_CONNECTOR_HDMIA;
+        *type_id_out = 1;
+    } else if (strcmp(display, "HDMI-A-2") == 0) {
+        *type_out = DRM_MODE_CONNECTOR_HDMIA;
+        *type_id_out = 2;
+    } else if (strcmp(display, "DSI-1") == 0) {
+        *type_out = DRM_MODE_CONNECTOR_DSI;
+        *type_id_out = 1;
+    } else if (strcmp(display, "DSI-2") == 0) {
+        *type_out = DRM_MODE_CONNECTOR_DSI;
+        *type_id_out = 2;
+    } else {
+        return false; // Ongeldige waarde
+    }
+    return true;
+}
+
 static struct drmdev *find_drmdev(struct libseat *libseat) {
     struct drm_connector *connector;
     struct drmdev *drmdev;
@@ -2172,16 +2191,23 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
                 LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
                 LOG_ERROR("DEVICE NAME: %d\n", connector->type);
                 LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
+
                 if (flutterpi->drm_vout_display != NULL) {
-                   LOG_ERROR("USING DISPLAY: %s\n", flutterpi->drm_vout_display);
+                    int expected_type, expected_type_id;
+                    if (!parse_drm_vout_display(flutterpi->drm_vout_display, &expected_type, &expected_type_id)) {
+                        LOG_ERROR("Invalid DRM output specified: %s\n", flutterpi->drm_vout_display);
+                        continue;
+                    }
+
+                    if (connector->type == expected_type && connector->type_id == expected_type_id) {
+                        LOG_ERROR("USING DISPLAY: %s\n", flutterpi->drm_vout_display);
+                        goto found_connected_connector;
+                    } else {
+                        continue; // Ga verder met de volgende connector
+                    }
                 } else {
                     LOG_ERROR("USING DEFAULT DISPLAY\n");
-                }
-
-                if (connector->type == DRM_MODE_CONNECTOR_DSI) {
                     goto found_connected_connector;
-                } else {
-                    continue;
                 }
             }
         }
