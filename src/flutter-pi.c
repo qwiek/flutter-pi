@@ -2127,11 +2127,11 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
         device = devices[i];
         
 
-        if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
-            // We need a primary node.
-            LOG_ERROR("Device \"%s\" doesn't have a primary node. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
-            // continue;
-        }
+        // if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
+        //     // We need a primary node.
+        //     LOG_ERROR("Device \"%s\" doesn't have a primary node. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
+        //     // continue;
+        // }
 
         drmdev = drmdev_new_from_path(device->nodes[DRM_NODE_PRIMARY], &drmdev_interface, libseat);
         if (drmdev == NULL) {
@@ -2144,7 +2144,10 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
             if (connector->variable_state.connection_state == kConnected_DrmConnectionState) {
                 LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
                 LOG_ERROR("DEVICE NAME: %d\n", connector->type);
-                goto found_connected_connector;
+                LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
+                if (connector->type == DRM_MODE_CONNECTOR_DSI) {
+                    goto found_connected_connector;
+                }
             }
         }
 
