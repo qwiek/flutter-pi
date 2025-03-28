@@ -2015,7 +2015,6 @@ valid_format:
             case 'i':  // --drm-vout-display
                 result_out->drm_vout_display = strdup(optarg);
                 if (result_out->drm_vout_display == NULL) {
-                    LOG_ERROR("Out of memory while parsing --drm-vout-display.\n");
                     return false;
                 }
                 if (!is_valid_drm_display(result_out->drm_vout_display)) {
