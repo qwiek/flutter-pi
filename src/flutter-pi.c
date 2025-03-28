@@ -2173,11 +2173,11 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
         device = devices[i];
         
 
-        // if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
-        //     // We need a primary node.
-        //     LOG_ERROR("Device \"%s\" doesn't have a primary node. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
-        //     // continue;
-        // }
+        if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
+            // We need a primary node.
+            LOG_ERROR("Device \"%s\" doesn't have a primary node. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
+            continue;
+        }
 
         drmdev = drmdev_new_from_path(device->nodes[DRM_NODE_PRIMARY], &drmdev_interface, libseat);
         if (drmdev == NULL) {
