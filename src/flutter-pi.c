@@ -2125,13 +2125,6 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
         drmDevicePtr device;
 
         device = devices[i];
-
-        //DISPLAY DEVICE SETTINGS
-        LOG_ERROR("Device \"%s\" has %d nodes.\n", device->nodes[DRM_NODE_PRIMARY], device->num_nodes);
-        for (int j = 0; j < device->num_nodes; j++) {
-            LOG_ERROR("Node %d: %s\n", j, device->nodes[j]);
-        }
-        LOG_ERROR("Device bus type: %d\n", device->bustype);
         
 
         if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
