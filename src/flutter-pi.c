@@ -2169,7 +2169,6 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
         drmDevicePtr device;
 
         device = devices[i];
-        
 
         if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
             // We need a primary node.
@@ -2180,11 +2179,12 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
         if (drmdev == NULL) {
             LOG_ERROR("Could not create drmdev from device at \"%s\". Continuing.\n", device->nodes[DRM_NODE_PRIMARY]);
             continue;
-        }   
+        }
 
         for_each_connector_in_drmdev(drmdev, connector) {
             if (connector->variable_state.connection_state == kConnected_DrmConnectionState) {
                 if (flutterpi->drm_vout_display != NULL) {
+                    // We only want to use the display that was specified on the command line.
                     int expected_type, expected_type_id;
                     if (!parse_drm_vout_display(flutterpi->drm_vout_display, &expected_type, &expected_type_id)) {
                         continue;
@@ -2200,7 +2200,6 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
                 }
             }
         }
-
         LOG_ERROR("Device \"%s\" doesn't have a display connected. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
         drmdev_unref(drmdev);
         continue;
