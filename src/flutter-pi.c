@@ -264,6 +264,8 @@ struct flutterpi {
     bool session_active;
 
     char *desired_videomode;
+
+    char *drm_vout_display;
 };
 
 struct device_id_and_fd {
