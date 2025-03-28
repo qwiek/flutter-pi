@@ -2138,12 +2138,12 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
             LOG_ERROR("Could not create drmdev from device at \"%s\". Continuing.\n", device->nodes[DRM_NODE_PRIMARY]);
             continue;
         }   
-        LOG_ERROR("DEVICE NAME: %s\n", connector->type);
+        x
 
         for_each_connector_in_drmdev(drmdev, connector) {
             if (connector->variable_state.connection_state == kConnected_DrmConnectionState) {
                 LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
-                
+                LOG_ERROR("DEVICE NAME: %s\n", connector->type);
                 goto found_connected_connector;
             }
         }
