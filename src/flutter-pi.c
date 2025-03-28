@@ -2173,7 +2173,7 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
                 LOG_ERROR("DEVICE NAME: %d\n", connector->type);
                 LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
                 if (flutterpi->drm_vout_display != NULL) {
-                   LOG_ERROR("USING DISPLAY: %s\n", cmd_args.drm_vout_display);
+                   LOG_ERROR("USING DISPLAY: %s\n", flutterpi->drm_vout_display);
                 } else {
                     LOG_ERROR("USING DEFAULT DISPLAY\n");
                 }
