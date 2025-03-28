@@ -141,7 +141,8 @@ OPTIONS:\n\
                              without a display attached.\n\
   --dummy-display-size \"width,height\" The width & height of the dummy display\n\
                              in pixels.\n\
-  --drm-vout-display <drm-device> The DRM display to use.\n\
+  --drm-vout-display         <drm-device> The DRM display to use.\n\
+                             HDMI-A-1, HDMI-A-2, DSI-1, DSI-2.\n\
 \n\
   -h, --help                 Show this help and exit.\n\
 \n\
@@ -2169,6 +2170,12 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
                 LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
                 LOG_ERROR("DEVICE NAME: %d\n", connector->type);
                 LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
+                if (cmd_args.drm_vout_display != NULL) {
+                   LOG_ERROR("USING DISPLAY: %s\n", cmd_args.drm_vout_display);
+                } else {
+                    LOG_ERROR("USING DEFAULT DISPLAY\n");
+                }
+
                 if (connector->type == DRM_MODE_CONNECTOR_DSI) {
                     goto found_connected_connector;
                 } else {
