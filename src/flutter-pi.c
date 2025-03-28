@@ -2140,7 +2140,7 @@ bool parse_drm_vout_display(const char *display, int *type_out, int *type_id_out
         *type_out = DRM_MODE_CONNECTOR_DSI;
         *type_id_out = 2;
     } else {
-        return false; // Ongeldige waarde
+        return false;
     }
     return true;
 }
@@ -2165,9 +2165,7 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
 
     // find a GPU that has a primary node
     drmdev = NULL;
-    LOG_ERROR("*********************************** QWIEK **********************************\n");
     for (int i = 0; i < n_devices; i++) {
-        LOG_ERROR("Device %d: %s\n", i, devices[i]->nodes[DRM_NODE_PRIMARY]);
         drmDevicePtr device;
 
         device = devices[i];
@@ -2175,7 +2173,6 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
 
         if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY))) {
             // We need a primary node.
-            LOG_ERROR("Device \"%s\" doesn't have a primary node. Skipping.\n", device->nodes[DRM_NODE_PRIMARY]);
             continue;
         }
 
@@ -2185,28 +2182,20 @@ static struct drmdev *find_drmdev(struct libseat *libseat) {
             continue;
         }   
 
-
         for_each_connector_in_drmdev(drmdev, connector) {
             if (connector->variable_state.connection_state == kConnected_DrmConnectionState) {
-                LOG_ERROR("Device \"%s\" has a display connected.\n", device->nodes[DRM_NODE_PRIMARY]);
-                LOG_ERROR("DEVICE NAME: %d\n", connector->type);
-                LOG_ERROR("DEVICE type id : %d\n", connector->type_id);
-
                 if (flutterpi->drm_vout_display != NULL) {
                     int expected_type, expected_type_id;
                     if (!parse_drm_vout_display(flutterpi->drm_vout_display, &expected_type, &expected_type_id)) {
-                        LOG_ERROR("Invalid DRM output specified: %s\n", flutterpi->drm_vout_display);
                         continue;
                     }
 
                     if (connector->type == expected_type && connector->type_id == expected_type_id) {
-                        LOG_ERROR("USING DISPLAY: %s\n", flutterpi->drm_vout_display);
                         goto found_connected_connector;
                     } else {
-                        continue; // Ga verder met de volgende connector
+                        continue; 
                     }
                 } else {
-                    LOG_ERROR("USING DEFAULT DISPLAY\n");
                     goto found_connected_connector;
                 }
             }
@@ -2407,7 +2396,6 @@ struct flutterpi *flutterpi_new_from_args(int argc, char **argv) {
         goto fail_free_fpi;
     }
 
-    // Sla de waarde van drm_vout_display op in fpi
     fpi->drm_vout_display = cmd_args.drm_vout_display ? strdup(cmd_args.drm_vout_display) : NULL;
 
 #ifndef HAVE_VULKAN
